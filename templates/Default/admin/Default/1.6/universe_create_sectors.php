@@ -23,15 +23,15 @@
 		<td>
 			<form method="POST" action="<?php echo $JumpGalaxyHREF; ?>">
 				<select name="gal_on" onchange="this.form.submit()"><?php
-					foreach($Galaxies as $CurrentGalaxy) { ?>
-						<option value="<?php echo $CurrentGalaxy->getGalaxyID(); ?>"<?php if($CurrentGalaxy->equals($Galaxy)) { ?> selected="SELECTED"<?php } ?>><?php
+					foreach ($Galaxies as $CurrentGalaxy) { ?>
+						<option value="<?php echo $CurrentGalaxy->getGalaxyID(); ?>"<?php if ($CurrentGalaxy->equals($Galaxy)) { ?> selected="SELECTED"<?php } ?>><?php
 							echo $CurrentGalaxy->getName(); ?>
 						</option><?php
 					} ?>
 				</select>
 				<input type="submit" value="Select Galaxy">
 			</form>
-			<p><a href="<?php echo $SMRFileHREF; ?>" class="submitStyle" target="_self">Create SMR file</a></p>
+			<p><a href="<?php echo $SMRFileHREF; ?>" class="submitStyle" target="_blank">Create SMR file</a></p>
 			<p><a href="<?php echo $EditGameDetailsHREF; ?>" class="submitStyle">Edit Game Details</a></p>
 		</td>
 

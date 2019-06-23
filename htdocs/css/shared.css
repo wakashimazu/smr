@@ -195,13 +195,6 @@ table.center, table.centered {
 .shrink {
 	width: 1%;
 }
-.blank {
-	margin: 0px;
-	padding: 0px;
-}
-.shiplistdescription {
-	white-space: nowrap;
-}
 .newbie {
 	font-style: italic;
 }
@@ -244,20 +237,6 @@ table.center, table.centered {
 }
 .cds {
 	color: #FF0;
-}
-
-/* GP */
-.gpsubheader {
-	font-style: italic;
-	margin-top: 0px;
-	margin-bottom: 0px;
-}
-.gpeditornote {
-	font-size: smaller;
-}
-.gpcolumn {
-	width: 50%;
-	vertical-align: top;
 }
 
 /* More */

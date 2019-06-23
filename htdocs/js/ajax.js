@@ -50,6 +50,8 @@ var exec = function(s) {
 		return false;
 	}
 
+	// This is used as a jQuery.get callback, but we don't use the arguments
+	// (textStatus, jqXHR), so they are omitted here.
 	updateRefresh = function(data) {
 		$('all > *', data).each(function(i, e) {
 			if(e.tagName === 'JS') {
@@ -94,10 +96,10 @@ var exec = function(s) {
 		var e = $(this);
 		data.toX = e.data('x');
 		data.toY = e.data('y');
-		$.get(submitMoveHREF, data, function(data, textStatus, jqXHR) {
+		$.get(submitMoveHREF, data, function(data) {
 				sn = getURLParameter('sn', submitMoveHREF);
 				highlightMoves();
-				updateRefresh(data, textStatus, jqXHR);
+				updateRefresh(data);
 			}, 'xml');
 	};
 
@@ -137,9 +139,21 @@ var exec = function(s) {
 		updateRefreshRequest();
 	};
 
+	// The following section attempts to prevent users from taking multiple
+	// actions within the same page. Possible actions include:
+	//
+	//  1. Pressing a hotkey
+	//  2. Submitting a form
+	//  3. Clicking a link
+	//
+	// We need to ensure that doing any one of these actions prevents all
+	// other actions from having any effect. The next three functions
+	// attempt to accomplish this.
+	//
 	var linkFollowed = false;
 	window.followLink = function(href) {
 		"use strict";
+		// Prevent further actions after a hotkey is pressed.
 		return function() {
 			if(linkFollowed !== true) {
 				linkFollowed = true;
@@ -148,9 +162,18 @@ var exec = function(s) {
 			}
 		};
 	};
-	// Prevent further click actions after a link is clicked.
-	// This is skipped if the link has a "target" attribute specified.
 	$(function() {
+		// Prevent further actions after a form is submitted.
+		$('form').submit(function(e) {
+			if (linkFollowed === true) {
+				e.preventDefault();
+			} else {
+				linkFollowed = true;
+				stopAJAX();
+			}
+		});
+		// Prevent further actions after a link is clicked.
+		// This is skipped if the link has a "target" attribute specified.
 		$('a[href]:not([target])').click(function(e) {
 			// Did we click the link with the left mouse button?
 			// We don't want to trigger this on right/middle clicks.

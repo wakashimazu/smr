@@ -1,14 +1,13 @@
 You are currently building: <?php
 	if ($ThisPlanet->hasCurrentlyBuilding()) {
 		$CurrentlyBuilding = $ThisPlanet->getCurrentlyBuilding();
-		foreach($CurrentlyBuilding as $Building) { ?>
+		foreach ($CurrentlyBuilding as $Building) { ?>
 			<br /><?php
 			echo $ThisPlanet->getStructureTypes($Building['ConstructionID'])->name(); ?> which will finish in <?php echo format_time($Building['TimeRemaining']); ?>
 			<br /><br />
 			<div class="buttonA"><a class="buttonA" href="<?php echo $ThisPlanet->getCancelHREF($Building['ConstructionID']); ?>">Cancel</a></div><?php
 		}
-	}
-	else { ?>
+	} else { ?>
 		Nothing!<?php
 	} ?>
 
@@ -30,7 +29,7 @@ You are currently building: <?php
 			<td class="left noWrap"><?php
 				foreach ($Structure->goods() as $GoodID => $Amount) {
 					$Good = $Goods[$GoodID]; ?>
-					&nbsp;<img class="bottom" src="<?php echo $Good['ImageLink']; ?>" title="<?php echo $Good['Name']; ?>" alt="" />&nbsp;<span <?php if ($ThisPlanet->getStockpile($GoodID) < $Amount) { ?> class="red" <?php } ?>><?php echo $Amount; ?></span>&nbsp;<br /><?php
+					&nbsp;<img class="bottom" src="<?php echo $Good['ImageLink']; ?>" width="13" height="16" title="<?php echo $Good['Name']; ?>" alt="" />&nbsp;<span <?php if ($ThisPlanet->getStockpile($GoodID) < $Amount) { ?> class="red" <?php } ?>><?php echo $Amount; ?></span>&nbsp;<br /><?php
 				} ?>
 			</td>
 			<td class="noWrap">
@@ -44,7 +43,7 @@ You are currently building: <?php
 				<br /><?php echo format_time($ThisPlanet->getConstructionTime($StructureID), true); ?>
 		</td>
 			<td><?php
-				if ($ThisPlanet->canBuild($ThisPlayer, $StructureID)===true) { ?>
+				if ($ThisPlanet->canBuild($ThisPlayer, $StructureID) === true) { ?>
 					<div class="buttonA"><a class="buttonA" href="<?php echo $ThisPlanet->getBuildHREF($StructureID); ?>">Build</a></div><?php
 				} ?>
 			</td>
@@ -59,11 +58,10 @@ if ($ThisPlanet->hasStockpile()) { ?>
 	<ul><?php
 		foreach ($ThisPlanet->getStockpile() as $id => $Amount) {
 			if ($Amount > 0) { ?>
-				<li><img src="<?php echo $Goods[$id]['ImageLink']; ?>" title="<?php echo $Goods[$id]['Name']; ?>" alt="<?php echo $Goods[$id]['Name']; ?>" />&nbsp;<?php echo $Goods[$id]['Name']; ?>: <?php echo $Amount; ?></li><?php
+				<li><img src="<?php echo $Goods[$id]['ImageLink']; ?>" width="13" height="16" title="<?php echo $Goods[$id]['Name']; ?>" alt="<?php echo $Goods[$id]['Name']; ?>" />&nbsp;<?php echo $Goods[$id]['Name']; ?>: <?php echo $Amount; ?></li><?php
 			}
 		} ?>
 	</ul><?php
-}
-else { ?>
+} else { ?>
 	 Nothing!</p><?php
 } ?>

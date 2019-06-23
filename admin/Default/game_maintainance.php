@@ -138,7 +138,7 @@ if (!file_exists($file_name)) {
 
 		if (!$db_file = fopen($file_name, 'a')) {
 
-			echo 'Cannot open file ('.$file_name.')';
+			echo 'Cannot open file (' . $file_name . ')';
 			exit;
 
 		}
@@ -149,35 +149,39 @@ if (!file_exists($file_name)) {
 		while ($db->nextRecord()) {
 
 			$table = $db->getField(0);
-			$db2->query('SHOW COLUMNS FROM '.$table);
-			$insert = 'INSERT INTO '.$table.' (';
+			$db2->query('SHOW COLUMNS FROM ' . $table);
+			$insert = 'INSERT INTO ' . $table . ' (';
 			$i = $db2->getNumRows() - 1;
-			$cols = $db2->getNumRows() -1;
+			$cols = $db2->getNumRows() - 1;
 			while ($db2->nextRecord()) {
 
 				$field = $db2->getField(0);
 				$insert .= $field;
-				if ($i != 0) $insert .= ',';
+				if ($i != 0) {
+					$insert .= ',';
+				}
 				$i--;
 
 			}
 			$i = $cols;
 			$insert .= ') VALUES (';
-			$db2->query('SELECT * FROM '.$table);
+			$db2->query('SELECT * FROM ' . $table);
 			while ($db2->nextRecord()) {
 
 				$db_ent = $insert;
-				for ($j=0; $j<=$cols; $j++) {
+				for ($j = 0; $j <= $cols; $j++) {
 
 					$db_ent .= $db2->getField($j);
-					if ($i != 0) $db_ent .= ',';
+					if ($i != 0) {
+						$db_ent .= ',';
+					}
 					$i--;
 
 				}
 				$db_ent .= ');';
 				if (fwrite($db_file, $db_ent) === FALSE) {
 
-					echo 'Cannot write to file ('.$file_name.')';
+					echo 'Cannot write to file (' . $file_name . ')';
 					exit;
 
 				}

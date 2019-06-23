@@ -1,19 +1,18 @@
 <?php
-if(isset($Boxes)) { ?>
+if (isset($Boxes)) { ?>
 	<table class="standard">
 		<tr>
 			<th>Folder</th>
 			<th>Messages</th>
 		</tr><?php
-		foreach($Boxes as $Box) { ?>
+		foreach ($Boxes as $Box) { ?>
 			<tr>
 				<td><a href="<?php echo $Box['ViewHREF']; ?>"><?php echo $Box['BoxName']; ?></a></td>
 				<td><?php echo $Box['TotalMessages']; ?></td>
 			</tr><?php
 		} ?>
 	</table><?php
-}
-else { ?>
+} else { ?>
 	<a href="<?php echo $BackHREF; ?>">Back</a><br /><?php
 	if (isset($Messages)) { ?>
 		<form method="POST" action="<?php echo $DeleteHREF; ?>">
@@ -27,17 +26,17 @@ else { ?>
 			<br /><br />
 			Click the name to reply<br />
 			<table width="100%" class="standard"><?php
-				foreach($Messages as $Message) { ?>
+				foreach ($Messages as $Message) { ?>
 					<tr>
 						<td class="shrink">
 							<input type="checkbox" name="message_id[]" value="<?php echo $Message['ID']; ?>">
 						</td>
 						<td class="noWrap">From: <?php
-							if(isset($Message['ReplyHREF'])) {
+							if (isset($Message['ReplyHREF'])) {
 								?><a href="<?php echo $Message['ReplyHREF']; ?>"><?php
 							}
 							echo $Message['SenderName'];
-							if(isset($Message['ReplyHREF'])) {
+							if (isset($Message['ReplyHREF'])) {
 								?></a><?php
 							} ?>
 						</td>
@@ -52,8 +51,7 @@ else { ?>
 				} ?>
 			</table>
 		</form><?php
-	}
-	else {
+	} else {
 		?>There are currently no messages in this box.<?php
 	}
 } ?>

@@ -14,7 +14,7 @@ $logIDs = array_keys($_REQUEST['id']);
 
 // Do we need to save any logs (or delete any saved logs)?
 if ($submitAction == 'Save' || $submitAction == 'Delete') {
-	if($submitAction == 'Save') {
+	if ($submitAction == 'Save') {
 		//save the logs we checked
 		// Query means people can only save logs that they are allowd to view.
 		$db->query('INSERT IGNORE INTO player_saved_combat_logs (account_id, game_id, log_id)
@@ -31,8 +31,7 @@ if ($submitAction == 'Save' || $submitAction == 'Delete') {
 							: '') . '
 						)
 					LIMIT ' . count($logIDs));
-	}
-	else if($submitAction == 'Delete') {
+	} else if ($submitAction == 'Delete') {
 		$db->query('DELETE FROM player_saved_combat_logs
 					WHERE log_id IN (' . $db->escapeArray($logIDs) . ')
 						AND account_id = ' . $db->escapeNumber($player->getAccountID()) . '
@@ -45,8 +44,7 @@ if ($submitAction == 'Save' || $submitAction == 'Delete') {
 	$container['message'] = $submitAction . 'd ' . $db->getChangedRows() . ' new logs.';
 	$container['action'] = $var['old_action'];
 	forward($container);
-}
-else if ($submitAction == 'View') {
+} else if ($submitAction == 'View') {
 	$container = create_container('skeleton.php', 'combat_log_viewer.php');
 	$container['log_ids'] = $logIDs;
 	sort($container['log_ids']);

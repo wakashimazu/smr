@@ -20,7 +20,7 @@ if (count($Alliances) > 0) { ?>
 		</thead>
 
 		<tbody class="list"><?php
-			foreach($Alliances as $AllianceID => $Alliance) { ?>
+			foreach ($Alliances as $AllianceID => $Alliance) { ?>
 				<tr id="alliance-<?php echo $AllianceID; ?>" class="ajax">
 					<td class="name">
 						<a href="<?php echo $Alliance['ViewHREF']; ?>"><?php echo $Alliance['Name']; ?></a>
@@ -34,16 +34,7 @@ if (count($Alliances) > 0) { ?>
 	</table>
 	<p class="center">Click column table to reorder!</p>
 
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
-	<script>
-	var list = new List('alliance-list', {
-		valueNames: ['name', 'totExp', 'avgExp', 'members'],
-		sortFunction: function(a, b, options) {
-			return list.utils.naturalSort(a.values()[options.valueName].replace(/<.*?>|,/g,''), b.values()[options.valueName].replace(/<.*?>|,/g,''), options);
-		}
-	});
-	</script><?php
-}
-else { ?>
+	<?php $this->setListjsInclude('alliance_list');
+} else { ?>
 	<p class="center">Currently there are no alliances.</p><?php
 } ?>

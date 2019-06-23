@@ -9,7 +9,7 @@ if ($ShowRoles && $CanChangeRoles) { ?>
 	<div id="alliance-desc" class="ajax"><?php
 		echo bbifyMessage($Alliance->getDescription()); ?>
 	</div><?php
-	if(isset($EditAllianceDescriptionHREF)) { ?>
+	if (isset($EditAllianceDescriptionHREF)) { ?>
 		<br />
 		<div class="buttonA"><a class="buttonA" href="<?php echo $EditAllianceDescriptionHREF; ?>">Edit</a></div>
 		<br /><?php
@@ -42,10 +42,10 @@ if ($ShowRoles && $CanChangeRoles) { ?>
 				<th class="sort" data-sort="name">Trader Name</th>
 				<th class="sort" data-sort="race">Race</th>
 				<th class="sort" data-sort="experience">Experience</th><?php
-				if($ShowRoles) { ?>
+				if ($ShowRoles) { ?>
 					<th class="sort shrink" data-sort="role">Role</th><?php
 				}
-				if(isset($ActiveIDs)) { ?>
+				if (isset($ActiveIDs)) { ?>
 					<th class="sort shrink" data-sort="status">Status</th><?php
 				} ?>
 			</tr>
@@ -59,14 +59,14 @@ if ($ShowRoles && $CanChangeRoles) { ?>
 					$Class .= ' bold';
 				}
 				if ($AlliancePlayer->hasNewbieStatus()) {
-					$Class.= ' newbie';
+					$Class .= ' newbie';
 				} ?>
 				<tr id="player-<?php echo $AlliancePlayer->getPlayerID(); ?>" class="ajax<?php echo $Class; ?>">
 					<td><?php
 						if ($AlliancePlayer->getAccountID() == $Alliance->getLeaderID()) { ?>*<?php }
 						echo $Count++; ?>
 					</td>
-					<td class="left name"><?php
+					<td class="left name" data-name="<?php echo $AlliancePlayer->getPlayerName(); ?>"><?php
 						echo $AlliancePlayer->getLevelName(); ?>&nbsp;<?php echo $AlliancePlayer->getLinkedDisplayName(false); ?>
 					</td>
 					<td class="race"><?php
@@ -94,15 +94,13 @@ if ($ShowRoles && $CanChangeRoles) { ?>
 							} ?>
 						</td><?php
 					}
-					if($ThisPlayer->getAllianceID() == $Alliance->getAllianceID()) { ?>
+					if ($ThisPlayer->getAllianceID() == $Alliance->getAllianceID()) { ?>
 						<td class="center status"><?php
-							if(in_array($AlliancePlayer->getAccountID(), $ActiveIDs)) { ?>
+							if (in_array($AlliancePlayer->getAccountID(), $ActiveIDs)) { ?>
 								<span class="green">Online</span><?php
-							}
-							else if($ThisPlayer->getAccountID() == $Alliance->getLeaderID() && $Disabled = SmrAccount::getAccount($AlliancePlayer->getAccountID())->isDisabled()) { ?>
-								<span class="red">Banned Until:<br/><?php echo date(DATE_FULL_SHORT_SPLIT,$Disabled['Time']); ?></span><?php
-							}
-							else { ?>
+							} else if ($ThisPlayer->getAccountID() == $Alliance->getLeaderID() && $Disabled = SmrAccount::getAccount($AlliancePlayer->getAccountID())->isDisabled()) { ?>
+								<span class="red">Banned Until:<br/><?php echo date(DATE_FULL_SHORT_SPLIT, $Disabled['Time']); ?></span><?php
+							} else { ?>
 								<span class="red">Offline</span><?php
 							} ?>
 						</td><?php
@@ -112,6 +110,8 @@ if ($ShowRoles && $CanChangeRoles) { ?>
 		</tbody>
 	</table>
 </div><?php
+
+$this->setListjsInclude('alliance_roster');
 
 if ($Alliance->getAllianceID() == $ThisPlayer->getAllianceID()) { ?>
 	<br /><h2>Options</h2><br />
@@ -133,19 +133,8 @@ if ($CanJoin === true) { ?>
 		Enter password to join alliance<br /><br />
 		<input type="password" name="password" size="30">&nbsp;<input class="submit" type="submit" name="action" value="Join">
 	</form><?php
-}
-else if($CanJoin !== false) { ?>
+} else if ($CanJoin !== false) { ?>
 	<br /><?php
 	echo $CanJoin;
 }
 ?>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
-<script>
-var list = new List('alliance-roster', {
-	valueNames: ['name', 'race', 'experience', 'role', 'status'],
-	sortFunction: function(a, b, options) {
-		return list.utils.naturalSort(a.values()[options.valueName].replace(/<.*?>|,/g,''), b.values()[options.valueName].replace(/<.*?>|,/g,''), options);
-	}
-});
-</script>

@@ -1,9 +1,9 @@
 <?php
 
-$template->assign('PageTopic','List Of Alliances');
+$template->assign('PageTopic', 'List Of Alliances');
 
 if (!$player->hasAlliance()) {
-	$container = create_container('skeleton.php','alliance_create.php');
+	$container = create_container('skeleton.php', 'alliance_create.php');
 	$template->assign('CreateAllianceHREF', SmrSession::getNewHREF($container));
 }
 
@@ -29,8 +29,7 @@ $alliances = array();
 while ($db->nextRecord()) {
 	if ($db->getField('alliance_id') != $player->getAllianceID()) {
 		$container['body'] = 'alliance_roster.php';
-	}
-	else {
+	} else {
 		$container['body'] = 'alliance_mod.php';
 	}
 	$allianceID = $db->getInt('alliance_id');

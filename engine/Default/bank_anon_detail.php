@@ -31,8 +31,7 @@ if (isset($var['maxValue'])
 	&& is_numeric($var['maxValue'])
 	&& $var['maxValue'] > 0) {
 	$maxValue = $var['maxValue'];
-}
-else {
+} else {
 	$db->query('SELECT MAX(transaction_id) FROM anon_bank_transactions
 				WHERE game_id=' . $db->escapeNumber($player->getGameID()) . '
 				AND anon_id=' . $db->escapeNumber($account_num)
@@ -45,7 +44,7 @@ else {
 	$minValue = max(1, $maxValue - 5);
 }
 
-if(isset($var['minValue'])
+if (isset($var['minValue'])
 	&& $var['minValue'] <= $maxValue
 	&& $var['minValue'] > 0
 	&& is_numeric($var['minValue'])) {
@@ -82,7 +81,7 @@ if ($db->getNumRows() > 0) {
 	$transactions = [];
 	while ($db->nextRecord()) {
 		$container['player_id'] = $db->getInt('player_id');
-		$link = create_link($container, get_colored_text($db->getInt('alignment'),$db->getField('player_name')));
+		$link = create_link($container, get_colored_text($db->getInt('alignment'), $db->getField('player_name')));
 		$transaction = $db->getField('transaction');
 		$amount = number_format($db->getInt('amount'));
 		$transactions[$db->getInt('transaction_id')] = [
@@ -99,5 +98,5 @@ $container = create_container('bank_anon_detail_processing.php');
 $container['account_num'] = $account_num;
 $template->assign('TransactionHREF', SmrSession::getNewHREF($container));
 
-$template->assign('PageTopic', 'Anonymous Account #'.$account_num);
+$template->assign('PageTopic', 'Anonymous Account #' . $account_num);
 Menu::bank();

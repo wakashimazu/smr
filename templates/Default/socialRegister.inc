@@ -28,11 +28,11 @@
 					<table border="0" cellspacing="0" cellpadding="1">
 						<tr>
 							<td width="27%">User name:</td>
-							<td width="73%"><input type="text" name="login" size="20" maxlength="32" class="InputFields" value="<?php if (isset($MatchingLogin)) { echo $MatchingLogin; } ?>"></td>
+							<td width="73%"><input required type="text" name="login" size="20" maxlength="32" class="InputFields" value="<?php if (isset($MatchingLogin)) { echo $MatchingLogin; } ?>"></td>
 						</tr>
 						<tr>
 							<td width="27%">Password:</td>
-							<td width="73%"><input type="password" name="password" size="20" maxlength="32" class="InputFields"></td>
+							<td width="73%"><input required type="password" name="password" size="20" maxlength="32" class="InputFields"></td>
 						</tr>
 					</table>
 					<p><input type="submit" name="link_login" value="Link Login"></p>
@@ -54,7 +54,7 @@
 						<table border="0" cellspacing="0" cellpadding="1">
 							<tr>
 								<td width="27%">User name:</td>
-								<td width="73%"><input type="text" name="login" size="20" maxlength="32" class="InputFields"></td>
+								<td width="73%"><input required type="text" name="login" size="20" maxlength="32" class="InputFields"></td>
 							</tr>
 						<tr>
 							<td width="27%">Password (Optional):</td>
@@ -80,14 +80,16 @@
 									<select name="timez" class="InputFields">
 										<?php
 										$time = TIME;
-											for ($i = -12; $i<= 11; $i++) echo('<option value="'.$i.'">' . date(DEFAULT_DATE_TIME_SHORT, $time + $i * 3600));
+											for ($i = -12; $i <= 11; $i++) {
+												echo('<option value="' . $i . '">' . date(DEFAULT_DATE_TIME_SHORT, $time + $i * 3600));
+											}
 										?>
 									</select>
 								</td>
 							</tr>
 							<tr>
 								<td width="27%">Referral ID (Optional):</td>
-								<td width="73%"><input type="number" name="referral_id" size="10" maxlength="20" class="InputFields"<?php if(isset($_REQUEST['ref'])){ echo 'value="'.htmlspecialchars($_REQUEST['ref']).'"'; }?>></td>
+								<td width="73%"><input type="number" name="referral_id" size="10" maxlength="20" class="InputFields"<?php if (isset($_REQUEST['ref'])) { echo 'value="' . htmlspecialchars($_REQUEST['ref']) . '"'; }?>></td>
 							</tr>
 							<tr>
 								<td colspan="2">&nbsp;</td>
@@ -95,7 +97,7 @@
 						</table>
 
 						<div style='font-size:80%;'>
-							<input type='checkbox' name='agreement' value='checkbox'>
+							<input required type='checkbox' name='agreement' value='checkbox'>
 							I have read and accept the
 							<a href='https://wiki.smrealms.de/rules' target="_blank" style='font-weight:bold;'>Terms of Use</a>.
 						</div>

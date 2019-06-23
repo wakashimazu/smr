@@ -20,9 +20,9 @@ if (count($Planets) > 0) { ?>
 			foreach ($Planets as $Planet) { ?>
 				<tr id="planet-<?php echo $Planet->getSectorID(); ?>" class="ajax">
 					<td class="image noWrap">
-						<img src="<?php echo $Planet->getTypeImage(); ?>"  width="16" height="16" alt="" title="<?php echo $Planet->getTypename().': '.$Planet->getTypeDescription(); ?>" /></td>
+						<img src="<?php echo $Planet->getTypeImage(); ?>"  width="16" height="16" alt="" title="<?php echo $Planet->getTypename() . ': ' . $Planet->getTypeDescription(); ?>" /></td>
 					<td class="name"><?php echo $Planet->getName(); ?></td>
-					<td class="lvl center"><?php echo number_format($Planet->getLevel(),2); ?></td>
+					<td class="lvl center"><?php echo number_format($Planet->getLevel(), 2); ?></td>
 					<td class="owner noWrap"><?php echo $Planet->getOwner()->getLinkedDisplayName(false); ?></td>
 					<td class="sector center"><a href="<?php echo Globals::getPlotCourseHREF($ThisPlayer->getSectorID(), $Planet->getSectorID()); ?>"><?php echo $Planet->getSectorID(); ?></a>&nbsp;(<a href="<?php echo $Planet->getGalaxy()->getGalaxyMapHREF(); ?>" target="gal_map"><?php echo $Planet->getGalaxy()->getName(); ?></a>)</td>
 					<td class="noWrap"><?php
@@ -50,7 +50,7 @@ if (count($Planets) > 0) { ?>
 							if ($Amount > 0) {
 								$Supply = true;
 								$Good = Globals::getGood($GoodID); ?>
-								&nbsp;<img style="padding:1px" class="bottom" src="<?php echo $Good['ImageLink']; ?>" title="<?php echo $Good['Name']; ?>" alt="<?php echo $Good['Name']; ?>" />&nbsp;<?php echo $Amount; ?><br /><?php
+								&nbsp;<img style="padding:1px" class="bottom" src="<?php echo $Good['ImageLink']; ?>" width="13" height="16" title="<?php echo $Good['Name']; ?>" alt="<?php echo $Good['Name']; ?>" />&nbsp;<?php echo $Amount; ?><br /><?php
 							}
 						}
 						if ($Supply === false) {
@@ -59,26 +59,17 @@ if (count($Planets) > 0) { ?>
 					</td>
 					<td class="build noWrap center"><?php
 						if ($Planet->hasCurrentlyBuilding()) {
-							foreach($Planet->getCurrentlyBuilding() as $Building) {
+							foreach ($Planet->getCurrentlyBuilding() as $Building) {
 								echo $Planet->getStructureTypes($Building['ConstructionID'])->name(); ?><br /><?php
 								echo format_time($Building['TimeRemaining'], true);
 							}
-						}
-						else {
+						} else {
 							?>Nothing<?php
 						} ?>
 					</td>
 				</tr><?php
 			} ?>
 		</tbody>
-	</table><br/>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
-	<script>
-	var list = new List('planet-list', {
-		valueNames: ['name', 'lvl', 'owner', 'sector', 'build'],
-		sortFunction: function(a, b, options) {
-			return list.utils.naturalSort(a.values()[options.valueName].replace(/<.*?>|,/g,''), b.values()[options.valueName].replace(/<.*?>|,/g,''), options);
-		}
-	});
-	</script><?php
+	</table><br />
+	<?php $this->setListjsInclude('PlanetList');
 } ?>

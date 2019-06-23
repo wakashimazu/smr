@@ -6,8 +6,9 @@
 //
 ////////////////////////////////////////////////////////////
 
-if($player->isLandedOnPlanet())
+if ($player->isLandedOnPlanet()) {
 	create_error('You are on a planet!');
+}
 
 // Create a session to store temporary display options
 // Do not garbage collect here for best performance (see map_galaxy.php).
@@ -28,7 +29,7 @@ if ($player->hasAlliance()) {
 	$template->assign('CheckboxFormHREF', ''); // Submit to same page
 }
 
-$template->assign('SpaceView',true);
+$template->assign('SpaceView', true);
 
 if (isset($var['ZoomDir'])) {
 	if ($var['ZoomDir'] == 'Shrink') {
@@ -49,7 +50,7 @@ $template->assign('MapShrinkHREF', SmrSession::getNewHREF($container));
 
 $galaxy = $player->getSector()->getGalaxy();
 
-$template->assign('GalaxyName',$galaxy->getName());
+$template->assign('GalaxyName', $galaxy->getName());
 
 $mapSectors = $galaxy->getMapSectors($player->getSectorID(), $player->getZoom());
-$template->assign('MapSectors',$mapSectors);
+$template->assign('MapSectors', $mapSectors);

@@ -3,6 +3,17 @@
 	<head>
 		<title><?php echo PAGE_TITLE; ?></title>
 		<link rel="stylesheet" href="css/login.css" />
+		<?php
+		// Include Google Analytics global site tag if we have one
+		if (!empty(GOOGLE_ANALYTICS_ID)) { ?>
+			<script async src="https://www.googletagmanager.com/gtag/js?id=<?php echo GOOGLE_ANALYTICS_ID; ?>"></script>
+			<script>
+				window.dataLayer = window.dataLayer || [];
+				function gtag() { dataLayer.push(arguments); }
+				gtag('js', new Date());
+				gtag('config', '<?php echo GOOGLE_ANALYTICS_ID; ?>');
+			</script><?php
+		} ?>
 		<!--[if IE]>
 		<style>
 		input.inputbox {
@@ -16,7 +27,7 @@
 	<body>
 		<div class="center">
 			<div class="collapsed">
-				<img src="images/login/smr_banner.gif" width="769" height="132" alt=""><br />
+				<img src="images/login/smr_banner.png" width="769" height="132" alt=""><br />
 
 				<!-- small header menu -->
 				<div id="small_menu">
@@ -42,7 +53,7 @@
 			</div>
 			<?php
 
-			if(isset($Message)) { ?>
+			if (isset($Message)) { ?>
 				<h4 style="margin-bottom: 0px;"><?php echo $Message ?></h4><?php
 			} ?>
 
@@ -119,23 +130,19 @@
 					</td>
 					<td id="twitter-feed" class="hide" style="height:256px;width:90%;">
 						<a class="twitter-timeline" data-dnt="true" data-height="250" data-theme="dark" data-chrome="transparent nofooter noheader noborders" href="https://twitter.com/SMRealms?ref_src=twsrc%5Etfw"></a>
-						<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 					</td>
 				</tr>
 			</table><?php
 
-			if(isset($GameNews)) { ?>
+			if (!empty($GameNews)) { ?>
 				<table class="standard center" style="width:730px;">
 					<tr>
-						<th>Time</th>
+						<th class="shrink">Time</th>
 						<th>Recent News</th>
 					</tr><?php
-					foreach($GameNews as $News) { ?>
+					foreach ($GameNews as $News) { ?>
 						<tr>
-							<td><?php
-								echo $News['Date']; ?><br /><?php
-								echo $News['Time']; ?>
-							</td>
+							<td class="center noWrap"><?php echo $News['Time']; ?></td>
 							<td><?php echo $News['Message']; ?></td>
 						</tr><?php
 					} ?>
@@ -144,11 +151,11 @@
 
 			<br /><?php
 
-			if(isset($Story)) { ?>
+			if (isset($Story)) { ?>
 				<table class="center nobord" style="width:640px;">
 					<tr>
 						<td><?php
-							foreach($Story as $StoryPart) { ?>
+							foreach ($Story as $StoryPart) { ?>
 								<p style="text-align:justify">
 									<span class="small" style="font-family: Verdana, Arial, Helvetica; color: #FFFFFF"><?php
 											echo $StoryPart; ?>
@@ -163,6 +170,7 @@
 			<span class="small"><a href="imprint.html">[Imprint]</a></span>
 		</div>
 
+		<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 		<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 		<script src="js/login.js"></script>
 

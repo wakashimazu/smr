@@ -14,7 +14,7 @@ if (!isset ($var['folder_id'])) {
 					AND receiver_delete = ' . $db->escapeBoolean(false) . '
 				LIMIT 1');
 	$showPoliticalBox = $db->getNumRows() > 0 || $player->isOnCouncil();
-	$messageBoxes = array ();
+	$messageBoxes = array();
 	foreach (getMessageTypeNames() as $message_type_id => $message_type_name) {
 		if (!$showPoliticalBox && $message_type_id == MSG_POLITICAL) {
 			continue;
@@ -51,7 +51,7 @@ if (!isset ($var['folder_id'])) {
 		$messageBoxes[] = $messageBox;
 	}
 
-	$messageBox = array ();
+	$messageBox = array();
 	$messageBox['MessageCount'] = 0;
 	$db->query('SELECT count(message_id) as count FROM message
 				WHERE sender_id = ' . $db->escapeNumber($player->getAccountID()) . '
@@ -74,18 +74,16 @@ if (!isset ($var['folder_id'])) {
 
 	$template->assign('MessageBoxes', $messageBoxes);
 
-	$container = create_container('skeleton.php','message_blacklist.php');
+	$container = create_container('skeleton.php', 'message_blacklist.php');
 	$container['folder_id'] = $message_type_id;
 	$template->assign('ManageBlacklistLink', SmrSession::getNewHREF($container));
-}
-else {
+} else {
 	$whereClause = 'WHERE game_id = ' . $db->escapeNumber($player->getGameID());
 	if ($var['folder_id'] == MSG_SENT) {
 		$whereClause .= ' AND sender_id = ' . $db->escapeNumber($player->getAccountID()) . '
 						AND message_type_id = ' . $db->escapeNumber(MSG_PLAYER) . '
 						AND sender_delete = ' . $db->escapeBoolean(false);
-	}
-	else {
+	} else {
 		$whereClause .= ' AND account_id = ' . $db->escapeNumber($player->getAccountID()) . '
 						AND message_type_id = ' . $db->escapeNumber($var['folder_id']) . '
 						AND receiver_delete = ' . $db->escapeBoolean(false);
@@ -93,8 +91,7 @@ else {
 
 	if ($var['folder_id'] == MSG_SENT) {
 		$messageBox['UnreadMessages'] = 0;
-	}
-	else {
+	} else {
 		$db->query('SELECT count(*) as count
 					FROM message ' . $whereClause . '
 						AND msg_read = ' . $db->escapeBoolean(false));
@@ -112,12 +109,12 @@ else {
 	}
 
 	$container = $var;
-	$container['page'] = $page -1;
+	$container['page'] = $page - 1;
 	if ($page > 0) {
 		$template->assign('PreviousPageHREF', SmrSession::getNewHREF($container));
 	}
-	$container['page'] = $page +1;
-	if (($page +1) * MESSAGES_PER_PAGE < $messageBox['TotalMessages']) {
+	$container['page'] = $page + 1;
+	if (($page + 1) * MESSAGES_PER_PAGE < $messageBox['TotalMessages']) {
 		$template->assign('NextPageHREF', SmrSession::getNewHREF($container));
 	}
 
@@ -149,7 +146,7 @@ else {
 				LIMIT ' . ($page * MESSAGES_PER_PAGE) . ', ' . MESSAGES_PER_PAGE);
 
 	$messageBox['NumberMessages'] = $db->getNumRows();
-	$messageBox['Messages'] = array ();
+	$messageBox['Messages'] = array();
 
 	// Group scout messages if they wouldn't fit on a single page
 	if ($var['folder_id'] == MSG_SCOUT && !isset($var['show_all']) && $messageBox['TotalMessages'] > $player->getScoutMessageGroupLimit()) {
@@ -162,8 +159,7 @@ else {
 		$messageBox['ShowAllHref'] = SmrSession::getNewHREF($dispContainer);
 
 		displayScouts($messageBox, $player);
-	}
-	else {
+	} else {
 		while ($db->nextRecord()) {
 			displayMessage($messageBox, $db->getField('message_id'), $db->getField('account_id'), $db->getField('sender_id'), $db->getField('message_text'), $db->getField('send_time'), $db->getField('msg_read'), $var['folder_id']);
 		}
@@ -221,13 +217,13 @@ function displayScouts(&$messageBox, $player) {
 
 function displayGrouped(&$messageBox, $playerName, $player_id, $sender_id, $message_text, $first, $last, $star) {
 	// Define a unique array so we can delete grouped messages
-	$array = array (
+	$array = array(
 		$sender_id,
 		$first,
 		$last
 	);
 
-	$message = array ();
+	$message = array();
 	$message['ID'] = base64_encode(serialize($array));
 	$message['Unread'] = $star;
 	$container = create_container('skeleton.php', 'trader_search_result.php');
@@ -242,7 +238,7 @@ function displayGrouped(&$messageBox, $playerName, $player_id, $sender_id, $mess
 function displayMessage(&$messageBox, $message_id, $receiver_id, $sender_id, $message_text, $send_time, $msg_read, $type) {
 	global $player;
 
-	$message = array ();
+	$message = array();
 	$message['ID'] = $message_id;
 	$message['Text'] = $message_text;
 	$message['Unread'] = $msg_read == 'FALSE';

@@ -1,6 +1,6 @@
 <?php
 
-$template->assign('PageTopic','Edit Account');
+$template->assign('PageTopic', 'Edit Account');
 
 $account_id = SmrSession::getRequestVar('account_id', '');
 $player_name = SmrSession::getRequestVar('player_name', '');
@@ -8,10 +8,9 @@ SmrSession::getRequestVar('login', '');
 SmrSession::getRequestVar('val_code', '');
 SmrSession::getRequestVar('email', '');
 SmrSession::getRequestVar('hofname', '');
-if(isset($_REQUEST['game_id'])) {
-	SmrSession::updateVar('SearchGameID',$_REQUEST['game_id']);
-}
-elseif(!isset($var['SearchGameID'])) {
+if (isset($_REQUEST['game_id'])) {
+	SmrSession::updateVar('SearchGameID', $_REQUEST['game_id']);
+} elseif (!isset($var['SearchGameID'])) {
 	SmrSession::updateVar('SearchGameID', 0);
 }
 $action = SmrSession::getRequestVar('action', false);
@@ -21,14 +20,13 @@ $curr_account = false;
 
 if ($action == "Search") {
 	if (!empty($player_name)) {
-		$gameIDClause = $var['SearchGameID'] != 0 ? ' AND game_id = ' . $db->escapeNumber($var['SearchGameID']) . ' ': '';
+		$gameIDClause = $var['SearchGameID'] != 0 ? ' AND game_id = ' . $db->escapeNumber($var['SearchGameID']) . ' ' : '';
 		$db->query('SELECT account_id FROM player
 					WHERE player_name = ' . $db->escapeString($player_name) . $gameIDClause . '
 					ORDER BY game_id DESC LIMIT 1');
 		if ($db->nextRecord()) {
 			$account_id = $db->getInt('account_id');
-		}
-		else {
+		} else {
 			$db->query('SELECT * FROM player
 						WHERE player_name LIKE ' . $db->escapeString($player_name . '%') . $gameIDClause);
 			if ($db->nextRecord()) {
@@ -42,7 +40,7 @@ if ($action == "Search") {
 	}
 
 	// get account from db
-	$db->query('SELECT account_id FROM account WHERE account_id = '.$db->escapeNumber($account_id).' OR ' .
+	$db->query('SELECT account_id FROM account WHERE account_id = ' . $db->escapeNumber($account_id) . ' OR ' .
 									   'login LIKE ' . $db->escapeString($var['login']) . ' OR ' .
 									   'email LIKE ' . $db->escapeString($var['email']) . ' OR ' .
 									   'hof_name LIKE ' . $db->escapeString($var['hofname']) . ' OR ' .
@@ -55,7 +53,7 @@ if ($action == "Search") {
 }
 
 
-if ($curr_account===false) {
+if ($curr_account === false) {
 	$games = array();
 	$db->query('SELECT game_id FROM game ORDER BY end_time DESC');
 	while ($db->nextRecord()) {
@@ -63,8 +61,7 @@ if ($curr_account===false) {
 	}
 	$template->assign('Games', $games);
 	$template->assign('EditFormHREF', SmrSession::getNewHREF(create_container('skeleton.php', 'account_edit.php')));
-}
-else {
+} else {
 	$template->assign('EditingAccount', $curr_account);
 	$template->assign('EditFormHREF', SmrSession::getNewHREF(create_container('account_edit_processing.php', '', array('account_id' => $curr_account->getAccountID()))));
 	$template->assign('ResetFormHREF', SmrSession::getNewHREF(create_container('skeleton.php', 'account_edit.php')));
@@ -96,8 +93,7 @@ else {
 		$admin_id = $db->getInt('admin_id');
 		if ($admin_id > 0) {
 			$admin = SmrAccount::getAccount($admin_id)->getLogin();
-		}
-		else {
+		} else {
 			$admin = 'System';
 		}
 		$closingHistory[] = array(
@@ -122,7 +118,7 @@ else {
 			'Host' => $db->getField('host')
 		);
 	}
-	$template->assign('RecentIPs',$recentIPs);
+	$template->assign('RecentIPs', $recentIPs);
 }
 
 

@@ -12,11 +12,9 @@ if (count($AlliedAllianceBanks) > 0) { ?>
 Hello <?php echo $ThisPlayer->getPlayerName(); ?>,<br /><?php
 if (isset($UnlimitedWithdrawal) && $UnlimitedWithdrawal === true) {
 	?>You can withdraw an unlimited amount from this account.<?php
-}
-else if (isset($PositiveWithdrawal)) {
+} else if (isset($PositiveWithdrawal)) {
 	?>You can only withdraw <?php echo number_format($PositiveWithdrawal); ?> more credits based on your deposits.<?php
-}
-else { ?>
+} else { ?>
 	You can withdraw up to <?php echo number_format($WithdrawalPerDay); ?> credits per 24 hours.<br />
 	So far you have withdrawn <?php echo number_format($TotalWithdrawn); ?> credits in the past 24 hours. You can withdraw <?php echo number_format($RemainingWithdrawal); ?> more credits.<?php
 } ?>
@@ -41,7 +39,7 @@ if (!empty($BankTransactions)) { ?>
 				</tr>
 			</table>
 		</form><?php
-		if($CanExempt) {
+		if ($CanExempt) {
 			?><form class="standard" method="POST" action="<?php echo $ExemptTransactionsFormHREF; ?>"><?php
 		} ?>
 			<table class="standard inset center">
@@ -52,37 +50,37 @@ if (!empty($BankTransactions)) { ?>
 					<th>Reason for transfer</th>
 					<th class="shrink">Withdrawal</th>
 					<th class="shrink">Deposit</th><?php
-					if($CanExempt) {
+					if ($CanExempt) {
 						?><th class="shrink noWrap">Make Exempt</th><?php
 					} ?>
 				</tr><?php
-				foreach($BankTransactions as $TransactionID => $BankTransaction) { ?>
+				foreach ($BankTransactions as $TransactionID => $BankTransaction) { ?>
 					<tr>
 						<td><?php echo number_format($TransactionID); ?></td>
 						<td class="noWrap"><?php echo date(DATE_FULL_SHORT_SPLIT, $BankTransaction['Time']); ?></td>
 						<td class="left"><?php
-							if($BankTransaction['Exempt']) {
+							if ($BankTransaction['Exempt']) {
 								?>Alliance Funds c/o<br /><?php
 							}
 							echo $BankTransaction['Player']->getLinkedDisplayName(); ?>
 						</td>
 						<td class="left"><?php echo $BankTransaction['Reason']; ?></td>
-						<td><?php if(is_numeric($BankTransaction['Withdrawal'])){ echo number_format($BankTransaction['Withdrawal']); }else{ ?>&nbsp;<?php } ?></td>
-						<td><?php if(is_numeric($BankTransaction['Deposit'])){ echo number_format($BankTransaction['Deposit']); }else{ ?>&nbsp;<?php } ?></td><?php
+						<td><?php if (is_numeric($BankTransaction['Withdrawal'])) { echo number_format($BankTransaction['Withdrawal']); } else { ?>&nbsp;<?php } ?></td>
+						<td><?php if (is_numeric($BankTransaction['Deposit'])) { echo number_format($BankTransaction['Deposit']); } else { ?>&nbsp;<?php } ?></td><?php
 						if ($CanExempt) { ?>
-							<td><input type="checkbox" name="exempt[<?php echo $TransactionID; ?>]" value="true"<?php if($BankTransaction['Exempt']){ ?> checked="checked"<?php } ?>></td><?php
+							<td><input type="checkbox" name="exempt[<?php echo $TransactionID; ?>]" value="true"<?php if ($BankTransaction['Exempt']) { ?> checked="checked"<?php } ?>></td><?php
 						} ?>
 					</tr><?php
 				} ?>
 				<tr>
 					<th colspan="5" class="right">Ending Balance</th>
 					<td class="bold right"><?php echo number_format($Alliance->getAccount()); ?></td><?php
-					if($CanExempt) {
+					if ($CanExempt) {
 						?><td><input class="submit" type="submit" name="action" value="Make Exempt"></td><?php
 					} ?>
 				</tr>
 			</table><?php
-		if($CanExempt) {
+		if ($CanExempt) {
 			?></form><?php
 		} ?>
 	</div>
@@ -92,8 +90,7 @@ if (!empty($BankTransactions)) { ?>
 			<a class="buttonA" href="<?php echo $BankReportHREF; ?>">View Bank Report</a>
 		</div>
 	</div><?php
-}
-else {
+} else {
 	?>Your alliance account is still unused.<br /><?php
 } ?>
 
