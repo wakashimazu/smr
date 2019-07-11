@@ -13,6 +13,13 @@ if (empty($galaxies)) {
 }
 
 $galaxy = SmrGalaxy::getGalaxy($var['game_id'], $var['gal_on']);
+
+// Efficiently construct the caches before proceeding
+$galaxy->getSectors();
+$galaxy->getPorts();
+$galaxy->getLocations();
+$galaxy->getPlanets();
+
 $connectivity = round($galaxy->getConnectivity());
 $template->assign('ActualConnectivity', $connectivity);
 
@@ -28,29 +35,26 @@ if (isset($var['message'])) {
 	SmrSession::updateVar('message', null); // Only show message once
 }
 
-if (isset($_REQUEST['connect']) && $_REQUEST['connect'] > 0) {
-	SmrSession::updateVar('conn', $_REQUEST['connect']);
-}
-else if (!isset($var['conn'])) {
-	SmrSession::updateVar('conn', 100);
-}
-$template->assign('RequestedConnectivity', $var['conn']);
-
-$container = $var;
+$container = create_container('skeleton.php', '1.6/universe_create_sectors.php');
+transfer('game_id');
+transfer('gal_on');
 $template->assign('JumpGalaxyHREF', SmrSession::getNewHref($container));
 
 $container['url'] = '1.6/universe_create_save_processing.php';
-$container['body'] = '1.6/universe_create_sectors.php';
 $template->assign('SubmitChangesHREF', SmrSession::getNewHref($container));
 
 $container['submit'] = 'Toggle Link';
+$container['AJAX'] = true;
 $template->assign('ToggleLink', $container);
 
-$container = $var;
-$container['body'] = '1.6/universe_create_sector_details.php';
+$container = create_container('skeleton.php', '1.6/universe_create_sector_details.php');
+transfer('game_id');
+transfer('gal_on');
 $template->assign('UniGen', $container);
 
-$container = $var;
+$container = create_container('skeleton.php');
+transfer('game_id');
+transfer('gal_on');
 $container['body'] = '1.6/universe_create_locations.php';
 $template->assign('ModifyLocationsHREF', SmrSession::getNewHREF($container));
 
@@ -68,3 +72,13 @@ $template->assign('SMRFileHREF', Globals::getSmrFileCreateHREF($var['game_id']))
 $container = create_container('skeleton.php', '1.6/game_edit.php');
 transfer('game_id');
 $template->assign('EditGameDetailsHREF', SmrSession::getNewHREF($container));
+
+$container = create_container('skeleton.php', '1.6/galaxies_edit.php');
+transfer('game_id');
+transfer('gal_on');
+$template->assign('EditGalaxyDetailsHREF', SmrSession::getNewHREF($container));
+
+$container = create_container('1.6/galaxy_reset_processing.php');
+transfer('game_id');
+transfer('gal_on');
+$template->assign('ResetGalaxyHREF', SmrSession::getNewHREF($container));

@@ -36,51 +36,47 @@ const SHIP_UPGRADE_PATH = array(
 	RACE_ALSKANT => array(
 		SHIP_TYPE_TRADE_MASTER,
 		SHIP_TYPE_TRIP_MAKER,
-		SHIP_TYPE_NEWBIE_MERCHANT_VESSEL,
 		SHIP_TYPE_SMALL_TIMER
 	),
 	RACE_CREONTI => array(
 		SHIP_TYPE_LEVIATHAN,
-		SHIP_TYPE_NEWBIE_MERCHANT_VESSEL,
 		SHIP_TYPE_MEDIUM_CARGO_HULK
 	),
 	RACE_HUMAN => array(
 		SHIP_TYPE_AMBASSADOR,
-		SHIP_TYPE_NEWBIE_MERCHANT_VESSEL,
 		SHIP_TYPE_RENAISSANCE,
 		SHIP_TYPE_LIGHT_FREIGHTER
 	),
 	RACE_IKTHORNE => array(
 		SHIP_TYPE_FAVOURED_OFFSPRING,
-		SHIP_TYPE_NEWBIE_MERCHANT_VESSEL,
 		SHIP_TYPE_PROTO_CARRIER,
 		SHIP_TYPE_TINY_DELIGHT
 	),
 	RACE_SALVENE => array(
 		SHIP_TYPE_DRUDGE,
-		SHIP_TYPE_NEWBIE_MERCHANT_VESSEL,
 		SHIP_TYPE_HATCHLINGS_DUE
 	),
 	RACE_THEVIAN => array(
 		SHIP_TYPE_EXPEDITER,
-		SHIP_TYPE_NEWBIE_MERCHANT_VESSEL,
 		SHIP_TYPE_SWIFT_VENTURE
 	),
 	RACE_WQHUMAN => array(
 		SHIP_TYPE_BLOCKADE_RUNNER,
-		SHIP_TYPE_NEWBIE_MERCHANT_VESSEL,
 		SHIP_TYPE_NEGOTIATOR,
 		SHIP_TYPE_SLIP_FREIGHTER
 	),
 	RACE_NIJARIN => array(
 		SHIP_TYPE_VENGEANCE,
-		SHIP_TYPE_NEWBIE_MERCHANT_VESSEL,
 		SHIP_TYPE_REDEEMER
 	)
 );
 
 
 try {
+	// Initialize the SmrSession before any output to avoid a warning about
+	// setcookie sending headers after output has started.
+	SmrSession::init();
+
 	$db = new SmrMySqlDatabase();
 	debug('Script started');
 
@@ -409,9 +405,11 @@ function changeNPCLogin() {
 	// We chose a new NPC, we don't care what we were doing beforehand.
 	$previousContainer = null;
 
+	// Lacking a convenient way to get up-to-date turns, choose the NPC
+	// that has taken an action least recently.
 	debug('Choosing new NPC');
 	$db = new SmrMySqlDatabase();
-	$db->query('SELECT login FROM player JOIN account USING(account_id) JOIN npc_logins USING(login) WHERE game_id=' . $db->escapeNumber(NPC_GAME_ID) . ' AND active=\'TRUE\' AND working=\'FALSE\' AND login NOT IN (' . $db->escapeArray($NPC_LOGINS_USED) . ') ORDER BY turns DESC LIMIT 1');
+	$db->query('SELECT login FROM player JOIN account USING(account_id) JOIN npc_logins USING(login) WHERE game_id=' . $db->escapeNumber(NPC_GAME_ID) . ' AND active=\'TRUE\' AND working=\'FALSE\' AND login NOT IN (' . $db->escapeArray($NPC_LOGINS_USED) . ') ORDER BY last_turn_update ASC LIMIT 1');
 	if (!$db->nextRecord()) {
 		debug('No free NPCs');
 		exitNPC();
@@ -560,8 +558,6 @@ function checkForShipUpgrade(AbstractSmrPlayer $player) {
 	foreach (SHIP_UPGRADE_PATH[$player->getRaceID()] as $upgradeShipID) {
 		if ($player->getShipTypeID() == $upgradeShipID) //We can't upgrade, only downgrade.
 			return false;
-		if ($upgradeShipID == SHIP_TYPE_NEWBIE_MERCHANT_VESSEL) //We can't actually buy the NMV, we just don't want to downgrade from it if we have it.
-			continue;
 		$cost = $player->getShip()->getCostToUpgrade($upgradeShipID);
 		if ($cost <= 0 || $player->getCredits() - $cost > MINUMUM_RESERVE_CREDITS) {
 			return doShipUpgrade($player, $upgradeShipID);

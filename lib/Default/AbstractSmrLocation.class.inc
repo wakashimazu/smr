@@ -21,7 +21,13 @@ class AbstractSmrLocation {
 	protected $hardwareSold;
 	protected $shipsSold;
 	protected $weaponsSold;
-	
+
+	public static function clearCache() {
+		self::$CACHE_ALL_LOCATIONS = [];
+		self::$CACHE_LOCATIONS = [];
+		self::$CACHE_SECTOR_LOCATIONS = [];
+	}
+
 	public static function &getAllLocations($forceUpdate = false) {
 		if ($forceUpdate || !isset(self::$CACHE_ALL_LOCATIONS)) {
 			$db = new SmrMySqlDatabase();
@@ -35,7 +41,25 @@ class AbstractSmrLocation {
 		}
 		return self::$CACHE_ALL_LOCATIONS;
 	}
-	
+
+	public static function getGalaxyLocations($gameID, $galaxyID, $forceUpdate = false) {
+		$db = new SmrMySqlDatabase();
+		$db->query('SELECT location_type.*, sector_id FROM sector LEFT JOIN location USING(game_id, sector_id) LEFT JOIN location_type USING (location_type_id) WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND galaxy_id = ' . $db->escapeNumber($galaxyID));
+		$galaxyLocations = [];
+		while ($db->nextRecord()) {
+			$sectorID = $db->getInt('sector_id');
+			if (!$db->hasField('location_type_id')) {
+				self::$CACHE_SECTOR_LOCATIONS[$gameID][$sectorID] = [];
+			} else {
+				$locationTypeID = $db->getInt('location_type_id');
+				$location = self::getLocation($locationTypeID, $forceUpdate, $db);
+				self::$CACHE_SECTOR_LOCATIONS[$gameID][$sectorID][$locationTypeID] = $location;
+				$galaxyLocations[$sectorID][$locationTypeID] = $location;
+			}
+		}
+		return $galaxyLocations;
+	}
+
 	public static function &getSectorLocations($gameID, $sectorID, $forceUpdate = false) {
 		if ($forceUpdate || !isset(self::$CACHE_SECTOR_LOCATIONS[$gameID][$sectorID])) {
 			$db = new SmrMySqlDatabase();

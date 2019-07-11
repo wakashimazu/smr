@@ -17,7 +17,7 @@ else
 // NOTE: If the format of this file is changed in an incompatible way,
 // make sure to update the SMR_FILE_VERSION!
 
-$file = '; SMR Sectors File v' . SMR_FILE_VERSION . '
+$file = ';SMR1.6 Sectors File v' . SMR_FILE_VERSION . '
 ; Created on ' . date(DEFAULT_DATE_FULL_SHORT) . '
 [Races]
 ; Name = ID' . EOL;
@@ -122,6 +122,11 @@ foreach ($galaxies as $galaxy) {
 
 
 foreach ($galaxies as $galaxy) {
+	// Efficiently construct the caches before proceeding
+	$galaxy->getLocations();
+	$galaxy->getPlanets();
+	$galaxy->getForces();
+
 	foreach ($galaxy->getSectors() as $sector) {
 		$file .= '[Sector=' . $sector->getSectorID() . ']' . EOL;
 		
